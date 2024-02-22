@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>iframe</title>
+</head>
+<body>
+  <h1>parent page</h1>
+  <input id="input" />
+  <p id="p">parent p</p>
+  <iframe src="./iframe.html"></iframe>
+</body>
+<script>
+  const mc = new MessageChannel()
+
+  const port1 = mc.port1
+  const port2 = mc.port2
+
+  const p = document.querySelector('#p')
+  const input = document.querySelector('#input')
+
+  input.oninput = (e) => {
+    port1.postMessage(e.data)
+  }
+
+  const ifm = document.querySelector('iframe')
+  const ifmWindow = ifm.contentWindow
+
+  ifm.addEventListener('load', () => {
+    port1.onmessage = (e) => {
+      console.log('load', e.data)
+      p.innerHTML = e.data
+    }
+    ifmWindow.postMessage('hello from the parent page!', '*', [port2])
+  })
+
+</script>
+</html>

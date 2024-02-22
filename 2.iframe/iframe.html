@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>iframe</title>
+</head>
+<body>
+  <h1>iframe</h1>
+  <p id="p">iframe p</p>
+</body>
+<script>
+  const p = document.querySelector('#p')
+
+  let port = null
+
+  window.addEventListener('message', (e) => {
+    p.innerHTML = e.data
+    port = e.ports[0]
+    port.postMessage("message back from the iframe!");
+    port.onmessage = (e) => {
+      p.innerHTML = p.textContent + e.data
+    }
+  })
+</script>
+</html>
